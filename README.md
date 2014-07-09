@@ -10,6 +10,12 @@
 
 Let you convert any image size.
 
+#Install
+
+``` bash
+bower install imageConverter
+```
+
 #Usage
 
 ``` js
