@@ -1,0 +1,13 @@
+{
+  "name": "imageConverter",
+  "version": "0.0.0",
+  "authors": [
+    "sparrow.jang <sparrow.jang@gmail.com>"
+  ],
+  "description": "Let you convert any image size",
+  "keywords": [
+    "image",
+    "resize"
+  ],
+  "license": "MIT"
+}
