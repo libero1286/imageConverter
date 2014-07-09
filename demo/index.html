@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <title></title>
+</head>
+<body>
+
+<div>
+  default:
+</div>
+<div>
+  <img src="pig_head.png" alt="" />
+</div>
+
+<div>
+  resize( 200 x 150 ):
+</div>
+
+<script src="imageConverter.js"></script>
+<script>
+
+var im = new Image();
+im.src = "pig_head.png";
+imageConverter.resizeAndOptimize( im, 200 ,150, function( data ){
+  var i = new Image();
+  i.src = data;
+  document.body.appendChild( i );
+});
+
+</script>
+</body>
+</html>
+
+
