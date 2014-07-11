@@ -6,11 +6,18 @@
 
 ![resize image](/demo/out_head.jpeg)
 
+
+![imageConverter.png](/images/imageConverter.png)
+
 ##Introduction
 
 Let you convert any image size.
 
 see [python version](https://github.com/SparrowJang/image_converter).
+
+##LiveDemo
+
+[demo](http://sparrowhome.twbbs.org/example/imageConverter/index.html)
 
 #Install
 
@@ -18,7 +25,7 @@ see [python version](https://github.com/SparrowJang/image_converter).
 bower install imageConverter
 ```
 
-#Usage
+##Usage
 
 ``` js
 var im = new Image();
@@ -30,7 +37,7 @@ imageConverter.resizeAndOptimize( im, 200 ,150, function( data ){
 });
 ```
 
-#Run
+##Run
 
 Clone this project.
 ``` bash
