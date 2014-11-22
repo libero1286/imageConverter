@@ -136,72 +136,93 @@
     c.height = height;
     return c;
   };
-  
-  var resizeAndOptimize = function( img, width, height, callback ) {
-  
+
+  var resize = function( img, w, h ){
+
+    var canvas = createCanvas( w, h );
+    canvas.getContext( "2d" ).drawImage( img, 0, 0, w, h );
+    return canvas;
+  };
+
+  var calculateImgSize = function( img, callback ){
+    
     var loadImage = document.createElement("img");
     var overlay = document.createElement( "div" );
-    var re_width, re_height, canvas;
     overlay.style.cssText = "overflow:hidden;width:0px;height:0px;";
   
     loadImage.onload = function() {
-    
-      size = [loadImage.width, loadImage.height]
-     
-      rateW = size[0] / width
-      rateH = size[1] / height
-     
-      if( rateW < rateH )
-          rate = rateW
-      else
-          rate = rateH
-     
-      if( rate ) {
-          re_width = parseInt( size[0] / rate )
-          re_height = parseInt( size[1] / rate )
-      } else {
-          re_width = size[0]
-          re_height = size[1]
-      }
-
-  
-      if ( rate > 1 ) {
-        var originCanvas = createCanvas( size[0], size[1] );
-        originCanvas.getContext( "2d" ).drawImage( loadImage, 0, 0, size[0], size[1] );
-        canvas = downScaleCanvas( originCanvas , 1/rate )
-      } else {
-        canvas = createCanvas( re_width, re_height );
-        canvas.getContext( "2d" ).drawImage( loadImage, 0, 0, re_width, re_height );
-      }
-     
-      diff_w = ( re_width - width )
-      diff_h = ( re_height - height )
-     
-      if ( diff_w )
-          start_x = diff_w / 2
-      else
-          start_x = 0
-     
-      if ( diff_h )
-          start_y = diff_h / 2
-      else
-          start_y = 0
-     
-      var output = createCanvas( width, height );
-      //output.getContext("2d").drawImage( canvas, 0, 0, width, height, start_x, start_y , width , height );
-      output.getContext("2d").drawImage( canvas, start_x, start_y , width , height, 0, 0, width, height );
+      callback( {width:loadImage.width, height:loadImage.height} );
       document.body.removeChild( overlay );
-      callback(output.toDataURL());
-    }
-  
+    };
     loadImage.src = img.src;
     overlay.appendChild( loadImage );
     document.body.appendChild( overlay );
+  };
+  
+  var resizeAndOptimize = function( img, size, width, height, callback ) {
+  
+    var re_width, re_height, canvas;
+  
+    rateW = size.width / width
+    rateH = size.height / height
+    
+    if( rateW < rateH )
+        rate = rateW;
+    else
+        rate = rateH;
+    
+    if( rate ) {
+        re_width = parseInt( size.width / rate );
+        re_height = parseInt( size.height / rate );
+    } else {
+        re_width = size.width;
+        re_height = size.height;
+    }
+
+    if ( rate > 1 ) {
+      var originCanvas = createCanvas( size.width, size.height );
+      originCanvas.getContext( "2d" ).drawImage( img, 0, 0, size.width, size.height );
+      canvas = downScaleCanvas( originCanvas , 1/rate )
+    } else {
+      canvas = resize( img, re_width, re_height );
+    }
+    
+    diff_w = ( re_width - width )
+    diff_h = ( re_height - height )
+    
+    if ( diff_w )
+        start_x = diff_w / 2
+    else
+        start_x = 0
+    
+    if ( diff_h )
+        start_y = diff_h / 2
+    else
+        start_y = 0
+    
+    var output = createCanvas( width, height );
+    //output.getContext("2d").drawImage( canvas, 0, 0, width, height, start_x, start_y , width , height );
+    output.getContext("2d").drawImage( canvas, start_x, start_y , width , height, 0, 0, width, height );
+    callback(output.toDataURL());
   
   };
 
   window.imageConverter = {
-    resizeAndOptimize:resizeAndOptimize
+    resizeAndOptimize:function( img, width, height, callback ){
+      var isIos = /(iphone|ipad)/i.test(navigator.userAgent);
+      calculateImgSize(img ,function( size ){
+        var max = size.width > size.height? size.width:size.height,
+            MAX_WIDTH_VALUE = 1924;
+        if ( isIos && max > MAX_WIDTH_VALUE ) {
+          var rateW = size.width / MAX_WIDTH_VALUE;
+          var rateH = size.height / MAX_WIDTH_VALUE;
+          var rate = rateW > rateH ? rateW:rateH;
+          var canvas = resize( img, rate * width, rate * height );
+          resizeAndOptimize( canvas, size, width, height, callback );
+        } else
+          resizeAndOptimize( img, size, width, height, callback );
+      });
+    }
   };
 
 })( window, document );
