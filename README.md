@@ -17,7 +17,7 @@ see [python version](https://github.com/SparrowJang/image_converter).
 
 ##LiveDemo
 
-[demo](http://www.sparrowjang.com/example/imageConverter/index.html)
+[demo](http://www.sparrowjang.com/imageConverter/demo/index.html)
 
 #Install
 
