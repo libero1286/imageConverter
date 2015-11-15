@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Imageconverter : Let you convert any image size.(js version)">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Imageconverter</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/SparrowJang/imageConverter">View on GitHub</a>
+
+          <h1 id="project_title">Imageconverter</h1>
+          <h2 id="project_tagline">Let you convert any image size.(js version)</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/SparrowJang/imageConverter/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/SparrowJang/imageConverter/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="image-converter" class="anchor" href="#image-converter" aria-hidden="true"><span class="octicon octicon-link"></span></a>Image Converter</h1>
+
+<p><img src="demo/head.jpeg" alt="original image"></p>
+
+<p>80 x 80 -&gt; 100 x 80</p>
+
+<p><img src="demo/out_head.jpeg" alt="resize image"></p>
+
+<p><img src="images/imageConverter.png" alt="imageConverter.png"></p>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>Let you convert any image size.</p>
+
+<p>see <a href="https://github.com/SparrowJang/image_converter">python version</a>.</p>
+
+<h2>
+<a id="livedemo" class="anchor" href="#livedemo" aria-hidden="true"><span class="octicon octicon-link"></span></a>LiveDemo</h2>
+
+<p><a href="http://www.sparrowjang.com/imageConverter/demo/index.html">demo</a></p>
+
+<h1>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h1>
+
+<div class="highlight highlight-source-shell"><pre>bower install imageConverter</pre></div>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> im <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Image</span>();
+im.src <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>pig_head.png<span class="pl-pds">"</span></span>;
+imageConverter.resizeAndOptimize( im, <span class="pl-c1">200</span> ,<span class="pl-c1">150</span>, <span class="pl-k">function</span>( <span class="pl-smi">data</span> ){
+  <span class="pl-k">var</span> outIm <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Image</span>();
+  outIm.src <span class="pl-k">=</span> data;
+  <span class="pl-c1">document</span>.<span class="pl-c1">body</span>.<span class="pl-c1">appendChild</span>( outIm );
+});</pre></div>
+
+<h2>
+<a id="run" class="anchor" href="#run" aria-hidden="true"><span class="octicon octicon-link"></span></a>Run</h2>
+
+<p>Clone this project.</p>
+
+<div class="highlight highlight-source-shell"><pre>git clone https://github.com/SparrowJang/imageConverter
+<span class="pl-c1">cd</span> imageConverter</pre></div>
+
+<p>Install gulp modules.</p>
+
+<div class="highlight highlight-source-shell"><pre>npm install</pre></div>
+
+<p>Run a server.</p>
+
+<div class="highlight highlight-source-shell"><pre>gulp serve</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Imageconverter maintained by <a href="https://github.com/SparrowJang">SparrowJang</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
