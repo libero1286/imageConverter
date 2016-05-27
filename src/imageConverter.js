@@ -23,13 +23,13 @@
       var tBuffer = new Float32Array(4 * sw * sh); // target buffer Float32 rgb
       var sR = 0, sG = 0,  sB = 0; // source's current point r,g,b
       // untested !
-      var sA = 0;  //source alpha    
-  
+      var sA = 0;  //source alpha
+
       for (sy = 0; sy < sh; sy++) {
           ty = sy * scale; // y src position within target
           tY = 0 | ty;     // rounded : target pixel's y
           yIndex = 4 * tY * tw;  // line index within target array
-          crossY = (tY != (0 | ty + scale)); 
+          crossY = (tY != (0 | ty + scale));
           if (crossY) { // if pixel is crossing botton target pixel
               wy = (tY + 1 - ty); // weight of point within target pixel
               nwy = (ty + scale - tY - 1); // ... within y+1 target pixel
@@ -47,7 +47,7 @@
               sG = sBuffer[sIndex + 1];
               sB = sBuffer[sIndex + 2];
               sA = sBuffer[sIndex + 3];
-              
+
               if (!crossX && !crossY) { // pixel does not cross
                   // just add components weighted by squared scale.
                   tBuffer[tIndex    ] += sR * sqScale;
@@ -61,7 +61,7 @@
                   tBuffer[tIndex + 1] += sG * w;
                   tBuffer[tIndex + 2] += sB * w;
                   tBuffer[tIndex + 3] += sA * w;
-                  // add weighted component for next (tX+1) px                
+                  // add weighted component for next (tX+1) px
                   nw = nwx * scale
                   tBuffer[tIndex + 4] += sR * nw; // not 3
                   tBuffer[tIndex + 5] += sG * nw; // not 4
@@ -74,7 +74,7 @@
                   tBuffer[tIndex + 1] += sG * w;
                   tBuffer[tIndex + 2] += sB * w;
                   tBuffer[tIndex + 3] += sA * w;
-                  // add weighted component for next (tY+1) px                
+                  // add weighted component for next (tY+1) px
                   nw = nwy * scale
                   tBuffer[tIndex + 4 * tw    ] += sR * nw; // *4, not 3
                   tBuffer[tIndex + 4 * tw + 1] += sG * nw; // *4, not 3
@@ -106,9 +106,9 @@
                   tBuffer[tIndex + 4 * tw + 6] += sB * nw;
                   tBuffer[tIndex + 4 * tw + 7] += sA * nw;
               }
-          } // end for sx 
+          } // end for sx
       } // end for sy
-  
+
       // create result canvas
       var resCV = document.createElement('canvas');
       resCV.width = tw;
@@ -117,7 +117,7 @@
       var imgRes = resCtx.getImageData(0, 0, tw, th);
       var tByteBuffer = imgRes.data;
       // convert float32 array into a UInt8Clamped Array
-      var pxIndex = 0; //  
+      var pxIndex = 0; //
       for (sIndex = 0, tIndex = 0; pxIndex < tw * th; sIndex += 4, tIndex += 4, pxIndex++) {
           tByteBuffer[tIndex] = Math.ceil(tBuffer[sIndex]);
           tByteBuffer[tIndex + 1] = Math.ceil(tBuffer[sIndex + 1]);
@@ -130,7 +130,7 @@
   }
 
   var createCanvas = function( width, height ) {
-  
+
     var c = document.createElement("canvas");
     c.width = width;
     c.height = height;
@@ -145,11 +145,11 @@
   };
 
   var calculateImgSize = function( img, callback ){
-    
+
     var loadImage = document.createElement("img");
     var overlay = document.createElement( "div" );
     overlay.style.cssText = "overflow:hidden;width:0px;height:0px;";
-  
+
     loadImage.onload = function() {
       callback( {width:loadImage.width, height:loadImage.height} );
       document.body.removeChild( overlay );
@@ -158,19 +158,19 @@
     overlay.appendChild( loadImage );
     document.body.appendChild( overlay );
   };
-  
-  var resizeAndOptimize = function( img, size, width, height, callback ) {
-  
+
+  var resizeAndOptimize = function( img, size, width, height, callback, options ) {
+
     var re_width, re_height, canvas;
-  
+
     rateW = size.width / width
     rateH = size.height / height
-    
+
     if( rateW < rateH )
         rate = rateW;
     else
         rate = rateH;
-    
+
     if( rate ) {
         re_width = parseInt( size.width / rate );
         re_height = parseInt( size.height / rate );
@@ -186,29 +186,39 @@
     } else {
       canvas = resize( img, re_width, re_height );
     }
-    
+
     diff_w = ( re_width - width )
     diff_h = ( re_height - height )
-    
+
     if ( diff_w )
         start_x = diff_w / 2
     else
         start_x = 0
-    
+
     if ( diff_h )
         start_y = diff_h / 2
     else
         start_y = 0
-    
+
     var output = createCanvas( width, height );
     //output.getContext("2d").drawImage( canvas, 0, 0, width, height, start_x, start_y , width , height );
     output.getContext("2d").drawImage( canvas, start_x, start_y , width , height, 0, 0, width, height );
-    callback(output.toDataURL());
-  
+    //canvas.toDataURL(type, encoderOptions);
+    if (options && options.type) {
+      options.encoderOptions = options.encoderOptions ? options.encoderOptions : 1;
+      callback(output.toDataURL(options.type, options.encoderOptions));
+    }
+    else {
+      callback(output.toDataURL());
+    }
+
   };
 
   window.imageConverter = {
-    resizeAndOptimize:function( img, width, height, callback ){
+    resizeAndOptimize:function( img, width, height, options, callback ){
+      if (!callback && (typeof options == 'function')) {
+        callback = options;
+      }
       var isIos = /(iphone|ipad)/i.test(navigator.userAgent);
       calculateImgSize(img ,function( size ){
         var max = size.width > size.height? size.width:size.height,
@@ -218,9 +228,9 @@
           var rateH = size.height / MAX_WIDTH_VALUE;
           var rate = rateW > rateH ? rateW:rateH;
           var canvas = resize( img, rate * width, rate * height );
-          resizeAndOptimize( canvas, size, width, height, callback );
+          resizeAndOptimize( canvas, size, width, height, callback, options );
         } else
-          resizeAndOptimize( img, size, width, height, callback );
+          resizeAndOptimize( img, size, width, height, callback, options );
       });
     }
   };
